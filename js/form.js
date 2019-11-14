@@ -6,23 +6,22 @@ botaoAdicionar.addEventListener('click', function(event){
 
     let paciente = obtemValoresFormulario(form);
 
-    let pacienteTr = montaTr(paciente);
-
     let erros = validaPaciente(paciente);
-
+    
     if (erros.length > 0) {
         exibeMensagemErro(erros);
         return;
     }
 
-    let tabela = document.querySelector('#tabela-pacientes');
-
-    tabela.appendChild(pacienteTr);
+    adicionaPacienteNaTabela(paciente);
 
     form.reset();
     
     let mensagemErro = document.querySelector('#mensagens-erro');
     mensagemErro.innerHTML ='';
+
+    const cursorFocus = document.querySelector('#nome');
+    cursorFocus.focus();
 });
 
 function obtemValoresFormulario(form){
@@ -35,6 +34,12 @@ function obtemValoresFormulario(form){
     }
 
     return paciente;
+}
+
+function adicionaPacienteNaTabela(paciente){
+    let pacienteTr = montaTr(paciente);
+    let tabela = document.querySelector('#tabela-pacientes');
+    tabela.appendChild(pacienteTr);
 }
 
 function montaTr(paciente){
@@ -71,36 +76,4 @@ function montaTd(dado, classe){
     td.textContent = dado;
     td.classList.add(classe)
     return td;
-}
-
-function validaPaciente(paciente){
-    let listaErros = [];
-
-    if (paciente.nome.length == 0) {
-        listaErros.push('Nome do paciente inválido!')
-    }
-
-    if (!validaPeso(paciente.peso) || paciente.peso.length == 0) {
-        listaErros.push('Peso do paciente inválido!');
-    }
-    
-    if (!validaAltura(paciente.altura) || paciente.altura.length == 0) {
-        listaErros.push('Altura do paciente inválida!');
-    }
-
-    if (paciente.gordura.length == 0 || paciente.gordura <= 0 ) {
-        listaErros.push('Gordura do paciente inválida!')
-    }
-
-    return listaErros;
-}
-
-function exibeMensagemErro(erros){
-    let ul = document.querySelector('#mensagens-erro');
-    ul.innerHTML = '';
-    erros.forEach(function(erro){
-        let li = document.createElement('li');
-        li.textContent = erro;
-        ul.appendChild(li);
-    });
 }
